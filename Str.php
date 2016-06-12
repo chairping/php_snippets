@@ -67,4 +67,38 @@ class Str {
     {
         return mb_strlen($value);
     }
+
+    /**
+     * @desc  过滤字符串
+     * @param string $str      要过滤的字符串
+     * @param string $tag      符合过滤条件的标记
+     * @return string          返回过滤后的字符串
+     * @sample
+     *      $string = <<<STR   /**
+     *          *  @desc  过滤字符串
+     *          *   @param string $str      要过滤的字符串
+     *          *\/
+     *      STR;
+     *      self::getDocComment($string, '@desc');  // output: 过滤字符串
+     */
+    public static function getDocComment($str, $tag = '') {
+        if (empty($tag)) {
+            return $str;
+        }
+        $matches = array();
+        preg_match("/".$tag." (.*)(\\r\\n|\\r|\\n)/U", $str, $matches);
+        if (isset($matches[1])) {
+            return trim($matches[1]);
+        }
+        return '';
+    }
+
+    public static function formatSize($size) {
+        $sizes = array(" B", " K", " M", " GB");
+        if ($size == 0) {
+            return 'n/a';
+        } else {
+            return (round($size/pow(1024, ($i = floor(log($size, 1024)))), 2) . $sizes[$i]);
+        }
+    }
 }
